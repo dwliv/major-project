@@ -45,7 +45,27 @@ function runGame() {
 
   //Draw Blocks
   for (let block of blocks) {
-    blocks.display();
+    block.display();
+  } 
+
+  //Coins
+  for (let i = coins.length - 1; i >= 0; i--) {
+    coins[i],display();
+    if (player.collidesWtih(coins[i])) {
+      //Remove Coins when you collect them
+      coins.splice(1, i);
+      collectedCoins++;
+    }
+  }
+
+  //Enemies
+  for (let enemie of enemies) {
+    enemie.display();
+
+    //Collision with enemie
+    if (player.collidesWtih(enemie)) {
+      gameState = "gameOver";
+    }
   }
 }
 
@@ -66,4 +86,10 @@ function gameOverScreen() {
   text("Game Over", width/2, height/2);
   textSize(22);
   text("Please press R to restart and hopefully you'll get better and win!");
+}
+
+function keyPressed() {
+  if (gameState === "start" && key === 'W') {
+    gameState = "playing";
+  }
 }
