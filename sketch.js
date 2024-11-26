@@ -15,13 +15,14 @@ let collectedCoins = 0;
 let gameState = "start";
 let windowWidth = 800;
 let windowHeight = 500;
+let marioImg;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
 }
 
 function draw() {
-  background(220);
+  background("#406274");
   if (gameState === "start") {
     showStartScreen();
   }
@@ -37,6 +38,7 @@ function runGame() {
   fill(0);
   textSize(13);
   text(`Coins: ${collectedCoins}`, 10, 20);
+  
 
   //Draw Platforms
   for (let platform of platforms) {
@@ -63,7 +65,7 @@ function runGame() {
     enemie.display();
 
     //Collision with enemie
-    if (player.collidesWtih(enemie)) {
+    if (player.collidesWith(enemie)) {
       gameState = "gameOver";
     }
   }
@@ -73,7 +75,7 @@ function showStartScreen() {
   fill(0);
   textSize(38);
   textAlign(CENTER, CENTER);
-  text("New Super Mario Bros", width / 2, height / 2);
+  text("New Super Mario Bros", width / 2, height / 2 - 40);
   textSize(22);
   text("Press Enter to Start", width / 2, height / 2);
   textAlign(BOTTOM, CENTER);
@@ -83,9 +85,25 @@ function gameOverScreen() {
   fill(0);
   textSize(38);
   textAlign(CENTER, CENTER);
-  text("Game Over", width/2, height/2);
+  text("Game Over", width/2, height/2 - 40);
   textSize(22);
-  text("Please press R to restart and hopefully you'll get better and win!");
+  text("Please press R to restart and hopefully you'll get better and win!", width / 2, height / 2);
+}
+
+function resetGame() {
+  //Reset the player
+  player = new Player(50, groundLevel - 40, 40, 40); // Create class for Player later
+
+  //Reset the platforms
+  platforms = [
+    new Platform(0, groundLevel, width, 50),// Create class for Platform later
+    new Platform(200, 350, 100, 20),
+    new Platform(400, 300, 100, 20),
+    new Platform(600, 250, 100, 20),
+  ];
+
+  //Reset the coins
+  collectedCoins = 0;
 }
 
 function keyPressed() {
