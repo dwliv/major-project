@@ -16,6 +16,11 @@ let gameState = "start";
 let windowWidth = 800;
 let windowHeight = 500;
 let marioImg;
+let backgroundImg;
+
+function preload() {
+  backgroundImg = loadImage("game.jpg");
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -72,6 +77,7 @@ function runGame() {
 }
 
 function showStartScreen() {
+  image(backgroundImg, 0 , 0, width, height);
   fill(0);
   textSize(38);
   textAlign(CENTER, CENTER);
@@ -107,7 +113,14 @@ function resetGame() {
 }
 
 function keyPressed() {
-  if (gameState === "start" && key === 'W') {
+  if (gameState === "start" && keyCode === ENTER) {
     gameState = "playing";
+  }
+  else if (gameState === "gameOver" && keyCode === 82) { //82 is they keyCode() for R or r in JavaScript
+    resetGame();
+    gameState = "start";
+  }
+  else if (gameState === "playing" && keyCode === 87) { //87 is the keyCode() for W or w in JavaScript
+    player.jump();
   }
 }
