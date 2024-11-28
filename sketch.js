@@ -18,6 +18,13 @@ let windowHeight = 500;
 let marioImg;
 let backgroundImg;
 
+//Start button properties
+let buttonX = 300;
+let buttonY = 200;
+let buttonWidth = 200;
+let buttonHeight = 50;
+let buttonHover = false;
+
 function preload() {
   backgroundImg = loadImage("game.jpg");
 }
@@ -82,9 +89,20 @@ function showStartScreen() {
   textSize(38);
   textAlign(CENTER, CENTER);
   text("New Super Mario Bros", width / 2, height / 2 - 40);
-  textSize(22);
-  text("Press Enter to Start", width / 2, height / 2);
-  textAlign(BOTTOM, CENTER);
+  //Draw button
+  if (buttonHover) {
+    fill (112, 233, 86);
+  }
+  else {
+    fill(200, 100, 90);
+  }
+  rect(buttonX, buttonY, buttonWidth, buttonHeight, 10);
+
+  //Button Text
+  fill(255);
+  textSize(32);
+  textAlign(CENTER, CENTER);
+  text("Start Game", buttonX + buttonWidth / 2, buttonY + buttonHeight / 2);
 }
 
 function gameOverScreen() {
@@ -122,5 +140,16 @@ function keyPressed() {
   }
   else if (gameState === "playing" && keyCode === 87) { //87 is the keyCode() for W or w in JavaScript
     player.jump();
+  }
+
+  function  mouseHover() {
+    //checks if mouse is over button
+    buttonHover = mouseX > buttonX && mouseX < buttonX + buttonWidth && mouseY > buttonY && mouseY < buttonY + buttonHeight;
+  }
+
+  function mousePressed() {
+    if (gameState === "start" && buttonHover) {
+      gameState = "playing";
+    }
   }
 }
