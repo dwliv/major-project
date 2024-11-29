@@ -88,7 +88,7 @@ function showStartScreen() {
   fill(0);
   textSize(38);
   textAlign(CENTER, CENTER);
-  text("New Super Mario Bros", width / 2, height / 2 - 40);
+  text("New Super Mario Bros.", width / 2, height / 5);
   //Draw button
   if (buttonHover) {
     fill (112, 233, 86);
@@ -128,6 +128,18 @@ function resetGame() {
 
   //Reset the coins
   collectedCoins = 0;
+}
+
+class Player {
+  constructor(x, y, w, h) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.xSpeed = 0;
+    thhis.ySpeed = 0;
+    this.onGround = false;
+  }
 }
 
 function keyPressed() {
