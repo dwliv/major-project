@@ -20,13 +20,14 @@ let backgroundImg;
 
 //Start button properties
 let buttonX = 300;
-let buttonY = 200;
+let buttonY = 250;
 let buttonWidth = 200;
 let buttonHeight = 50;
 let buttonHover = false;
 
 function preload() {
   backgroundImg = loadImage("game.jpg");
+  marioImg = loadImage("mario.jpg");
 }
 
 function setup() {
@@ -86,8 +87,9 @@ function runGame() {
 function showStartScreen() {
   image(backgroundImg, 0 , 0, width, height);
   fill(0);
-  textSize(38);
+  textFont('Courier New');
   textAlign(CENTER, CENTER);
+  textSize(50);
   text("New Super Mario Bros.", width / 2, height / 5);
   //Draw button
   if (buttonHover) {
@@ -126,7 +128,18 @@ function resetGame() {
     new Platform(600, 250, 100, 20),
   ];
 
+  //Reset the blocks
+  blocks = [new Block(220, 310), new Block(420, 260)];
+
   //Reset the coins
+  coins = [new Coin(230, 285), new Coin(430, 235)];
+
+  //Reset the enemies
+  enemies = [
+    new Enemy(300, groundlevel - 20, 20, 20, 1)
+  ];
+
+  //Reset score
   collectedCoins = 0;
 }
 
@@ -139,6 +152,10 @@ class Player {
     this.xSpeed = 0;
     thhis.ySpeed = 0;
     this.onGround = false;
+  }
+
+  display() {
+    image(marioImg, this.x, this.y, this.w, this.h);
   }
 }
 
@@ -153,15 +170,16 @@ function keyPressed() {
   else if (gameState === "playing" && keyCode === 87) { //87 is the keyCode() for W or w in JavaScript
     player.jump();
   }
+}
 
-  function  mouseHover() {
-    //checks if mouse is over button
-    buttonHover = mouseX > buttonX && mouseX < buttonX + buttonWidth && mouseY > buttonY && mouseY < buttonY + buttonHeight;
-  }
+function  mouseMoved() {
+  //checks if mouse is over button
+  buttonHover = mouseX > buttonX && mouseX < buttonX + buttonWidth && mouseY > buttonY && mouseY < buttonY + buttonHeight;
+}
 
-  function mousePressed() {
-    if (gameState === "start" && buttonHover) {
-      gameState = "playing";
-    }
+function mousePressed() {
+  if (gameState === "start" && buttonHover) {
+    gameState = "playing";
   }
 }
+
