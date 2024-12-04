@@ -17,6 +17,7 @@ let windowWidth = 800;
 let windowHeight = 500;
 let marioImg;
 let backgroundImg;
+let goombaImg;
 
 //Start button properties
 let buttonX = 300;
@@ -28,6 +29,7 @@ let buttonHover = false;
 function preload() {
   backgroundImg = loadImage("game.jpg");
   marioImg = loadImage("mario.jpg");
+  goombaImg = loadImage("goomba.jpg");
 }
 
 function setup() {
@@ -136,7 +138,7 @@ function resetGame() {
 
   //Reset the enemies
   enemies = [
-    new Enemy(300, groundlevel - 20, 20, 20, 1)
+    new Enemy(300, groundLevel - 20, 20, 20, 1)
   ];
 
   //Reset score
@@ -150,12 +152,43 @@ class Player {
     this.w = w;
     this.h = h;
     this.xSpeed = 0;
-    thhis.ySpeed = 0;
+    this.ySpeed = 0;
     this.onGround = false;
   }
+  update() {
+    this.ySpeed += gravity;
+    this.y += this.ySpeed;
+    this.x+= this.xSpeed;
+
+    if (this.y +this.h >= groundLevel) {
+      this.y = groundLevel - this.h;
+      this.ySpeed=0;
+      this.onGround = true;
+    }
+
+  }
+  
 
   display() {
     image(marioImg, this.x, this.y, this.w, this.h);
+  }
+}
+
+class Enemy {
+  constructor(x, y, w, h , speed) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.speed = speed;
+  }
+
+  update() {
+    this.x += this.speed;
+  }
+
+  display() {
+    image(goombaImg, this.x, this.y, this.w, this.h);
   }
 }
 

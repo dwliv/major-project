@@ -1,6 +1,6 @@
 # Project Description
 
-- For right now what I'm thinking if building is a level of New Super Mario Bros for the Nintendo DS in 2006. Just a basic level from world one is what I will try to build
+- For right now what I'm thinking of building is a level of New Super Mario Bros for the Nintendo DS in 2006. Just a basic level from world one is what I will try to build.
 
 ## Needs to have list
 
