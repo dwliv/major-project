@@ -18,7 +18,8 @@ let windowHeight = 500;
 let marioImg;
 let backgroundImg;
 let goombaImg;
-
+let startMusic;
+let cameraX = 0;
 //Start button properties
 let buttonX = 300;
 let buttonY = 250;
@@ -30,6 +31,7 @@ function preload() {
   backgroundImg = loadImage("game.jpg");
   marioImg = loadImage("mario.jpg");
   goombaImg = loadImage("goomba.jpg");
+  startMusic = loadSound("startMusic.mp3");
 }
 
 function setup() {
@@ -47,6 +49,34 @@ function draw() {
   else if (gameState === "gameOver") {
     gameOverScreen();
   }
+}
+
+function showStartScreen() {
+  image(backgroundImg, 0 , 0, width, height);
+  fill(0);
+  textFont('Courier New');
+  textAlign(CENTER, CENTER);
+  textSize(50);
+  text("New Super Mario Bros.", width / 2, height / 5);
+  //Draw button
+  if (buttonHover) {
+    fill (112, 233, 86);
+  }
+  else {
+    fill(200, 100, 90);
+  }
+  rect(buttonX, buttonY, buttonWidth, buttonHeight, 10);
+
+  //Button Text
+  fill(255);
+  textSize(32);
+  textAlign(CENTER, CENTER);
+  text("Start Game", buttonX + buttonWidth / 2, buttonY + buttonHeight / 2);
+  startMusic.loop();
+}
+
+function adjustVolume() {
+  startMusic.amp(0.015);
 }
 
 function runGame() {
@@ -86,28 +116,6 @@ function runGame() {
   }
 }
 
-function showStartScreen() {
-  image(backgroundImg, 0 , 0, width, height);
-  fill(0);
-  textFont('Courier New');
-  textAlign(CENTER, CENTER);
-  textSize(50);
-  text("New Super Mario Bros.", width / 2, height / 5);
-  //Draw button
-  if (buttonHover) {
-    fill (112, 233, 86);
-  }
-  else {
-    fill(200, 100, 90);
-  }
-  rect(buttonX, buttonY, buttonWidth, buttonHeight, 10);
-
-  //Button Text
-  fill(255);
-  textSize(32);
-  textAlign(CENTER, CENTER);
-  text("Start Game", buttonX + buttonWidth / 2, buttonY + buttonHeight / 2);
-}
 
 function gameOverScreen() {
   fill(0);
