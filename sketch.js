@@ -18,8 +18,14 @@ let windowHeight = 500;
 let marioImg;
 let backgroundImg;
 let goombaImg;
+let blockImg;
+let platformImg;
+let coinImg;
 let startMusic;
+
+//makes the camera pan to the left when the player gets too close too the right edge
 let cameraX = 0;
+
 //Start button properties
 let buttonX = 300;
 let buttonY = 250;
@@ -32,6 +38,9 @@ function preload() {
   marioImg = loadImage("mario.jpg");
   goombaImg = loadImage("goomba.jpg");
   startMusic = loadSound("startMusic.mp3");
+  blockImg = loadImage("block.png");
+  platformImg = loadImage("platform.jpg");
+  coinImg = loadImage("coin.jpg");
 }
 
 function setup() {
@@ -58,6 +67,7 @@ function showStartScreen() {
   textAlign(CENTER, CENTER);
   textSize(50);
   text("New Super Mario Bros.", width / 2, height / 5);
+  
   //Draw button
   if (buttonHover) {
     fill (112, 233, 86);
@@ -128,21 +138,32 @@ function gameOverScreen() {
 
 function resetGame() {
   //Reset the player
-  player = new Player(50, groundLevel - 40, 40, 40); // Create class for Player later
+  player = new Player(50, groundLevel - 40, 40, 40);
 
   //Reset the platforms
   platforms = [
-    new Platform(0, groundLevel, width, 50),// Create class for Platform later
+    new Platform(0, groundLevel, width, 50),
     new Platform(200, 350, 100, 20),
     new Platform(400, 300, 100, 20),
     new Platform(600, 250, 100, 20),
   ];
 
   //Reset the blocks
-  blocks = [new Block(220, 310), new Block(420, 260)];
+  blocks = [
+    new Block(320, 310),
+    new Block(620, 260),
+    new Block(920, 210),
+    new Block(1320, 310,)
+  ];
 
   //Reset the coins
-  coins = [new Coin(230, 285), new Coin(430, 235)];
+  coins = [
+    new Coin(330, 285),
+    new Coin(630, 235),
+    new Coin(930, 185),
+    new Coin(1330, 285),
+    new Coin(1500, 400),
+  ];
 
   //Reset the enemies
   enemies = [
@@ -176,14 +197,13 @@ class Player {
 
   }
   
-
   display() {
     image(marioImg, this.x, this.y, this.w, this.h);
   }
 }
 
 class Enemy {
-  constructor(x, y, w, h , speed) {
+  constructor(x, y, w, h, speed) {
     this.x = x;
     this.y = y;
     this.w = w;
@@ -197,6 +217,45 @@ class Enemy {
 
   display() {
     image(goombaImg, this.x, this.y, this.w, this.h);
+  }
+}
+
+class Coin {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.w = 25;
+    this.h = 25;
+  }
+
+  display() {
+    fill(255, 223, 0);
+    ellipse(this.x + this.w / 2, this.y + this.h / 2, this.w, this.h);
+  }
+}
+
+class Platform {
+  constructor(x, y, w, h) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+  }
+
+  display() {
+    image(platformImg, this.x, this.y, this.w, this.h);
+  }
+}
+
+class Block {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.w = 45;
+    this.h = 45;
+  }
+  display() {
+    image(blockImg, this.x, this.y, this.w, thois.h);
   }
 }
 
