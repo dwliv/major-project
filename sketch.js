@@ -21,6 +21,8 @@ let goombaImg;
 let blockImg;
 let platformImg;
 let coinImg;
+let questionImg;
+let flagImg;
 let startMusic;
 
 //makes the camera pan to the left when the player gets too close too the right edge
@@ -41,6 +43,8 @@ function preload() {
   blockImg = loadImage("block.png");
   platformImg = loadImage("platform.jpg");
   coinImg = loadImage("coin.jpg");
+  questionImg = loadImage("question.jpg");
+  flagImg = loadImage("flag.jpg");
 }
 
 function setup() {
@@ -106,9 +110,9 @@ function runGame() {
   } 
 
   //Coins
-  for (let i = coins.length - 1; i >= 0; i--) {
+  for (let coin of coins) {
     coins[i],display();
-    if (player.collidesWtih(coins[i])) {
+    if (player.collidesWith(coins[i])) {
       //Remove Coins when you collect them
       coins.splice(1, i);
       collectedCoins++;
@@ -185,14 +189,23 @@ class Player {
     this.onGround = false;
   }
   update() {
+    //Add gravity
     this.ySpeed += gravity;
     this.y += this.ySpeed;
+
+    //Add horizontal movement
     this.x+= this.xSpeed;
 
-    if (this.y +this.h >= groundLevel) {
+    //Prevents the player from falling below the ground level
+    if (this.y + this.h >= groundLevel) {
       this.y = groundLevel - this.h;
-      this.ySpeed=0;
+      //Stop verticle movement
+      this.ySpeed = 0;
       this.onGround = true;
+    }
+    else {
+      //if not touching the ground, the player is either in the air or falling to its death
+      this.onGround = false;
     }
 
   }
@@ -212,6 +225,7 @@ class Enemy {
   }
 
   update() {
+    //moves the enemy horizontally by the speed value
     this.x += this.speed;
   }
 
@@ -274,7 +288,11 @@ function keyPressed() {
 
 function  mouseMoved() {
   //checks if mouse is over button
-  buttonHover = mouseX > buttonX && mouseX < buttonX + buttonWidth && mouseY > buttonY && mouseY < buttonY + buttonHeight;
+  buttonHover = 
+  mouseX > buttonX && //Checks if the mouse is past the left edge
+  mouseX < buttonX + buttonWidth && //Checks if mouse is before the right edge
+  mouseY > buttonY && //Checks if mouse is past the top edge 
+   mouseY < buttonY + buttonHeight; //Checks if the mouse is before the bottom edge
 }
 
 function mousePressed() {
