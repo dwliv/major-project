@@ -49,6 +49,7 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  resetGame();
 }
 
 function draw() {
@@ -56,7 +57,7 @@ function draw() {
   if (gameState === "start") {
     showStartScreen();
   }
-  else if (gameState === "run") {
+  else if (gameState === "playing") {
     runGame();
   }
   else if (gameState === "gameOver") {
@@ -96,7 +97,7 @@ function adjustVolume() {
 function runGame() {
   fill(0);
   textSize(13);
-  text(`Coins: ${collectedCoins}`, 10, 20);
+  text(`Coins: ${collectedCoins}`, 40, 20);
   
 
   //Draw Platforms
@@ -110,7 +111,7 @@ function runGame() {
   } 
 
   //Coins
-  for (let coin of coins) {
+  for (let i = coins.length-1; i >= 0; i--) {
     coins[i],display();
     if (player.collidesWith(coins[i])) {
       //Remove Coins when you collect them
@@ -121,11 +122,21 @@ function runGame() {
 
   //Enemies
   for (let enemie of enemies) {
+    enemies.update();
     enemie.display();
 
     //Collision with enemie
     if (player.collidesWith(enemie)) {
       gameState = "gameOver";
+    }
+  }
+
+  player.update();
+  player.display();
+
+  for (let platform of plaforms) {
+    if (player.collidesWith(platform)) {
+      player.landOn(platform);
     }
   }
 }
@@ -274,7 +285,7 @@ class Block {
 }
 
 function keyPressed() {
-  if (gameState === "start" && keyCode === ENTER) {
+  if (gameState === "start" && buttonHover) {
     gameState = "playing";
   }
   else if (gameState === "gameOver" && keyCode === 82) { //82 is they keyCode() for R or r in JavaScript
