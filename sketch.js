@@ -9,7 +9,7 @@ let platforms = [];
 let blocks = [];
 let coins = []; 
 let enemies = [];
-let groundLevel = 350;
+let groundLevel = 400;
 let gravity = 1;
 let collectedCoins = 0;
 let gameState = "start";
@@ -25,7 +25,7 @@ let questionImg;
 let flagImg;
 let startMusic;
 
-//makes the camera pan to the left when the player gets too close too the right edge
+//makes the camera pan to the left when the player gets too close to the right edge
 let cameraX = 0;
 
 //Start button properties
@@ -95,9 +95,15 @@ function adjustVolume() {
 }
 
 function runGame() {
+  //Pans the screen when the player si too close to the right side
+  cameraX = constrain(player.x - width / 2 + player.w / 2, 0, 1600-width);
+
+  //Pan the screen/camera
+  translate(-cameraX, 0);
+
   fill(0);
-  textSize(13);
-  text(`Coins: ${collectedCoins}`, 40, 20);
+  textSize(23);
+  text(`Coins: ${collectedCoins}`, 55, 20);
   
 
   //Draw Platforms
