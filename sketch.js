@@ -24,6 +24,7 @@ let coinImg;
 let questionImg;
 let flagImg;
 let startMusic;
+let gameImg;
 
 //makes the camera pan to the left when the player gets too close to the right edge
 let cameraX = 0;
@@ -45,6 +46,7 @@ function preload() {
   coinImg = loadImage("coin.jpg");
   questionImg = loadImage("question.jpg");
   flagImg = loadImage("flag.jpg");
+  gameImg = loadImage("bg.jpg");
 }
 
 function setup() {
@@ -53,7 +55,7 @@ function setup() {
 }
 
 function draw() {
-  background("#406274");
+  image(gameImg, 0, 0, width, height);
   if (gameState === "start") {
     showStartScreen();
   }
@@ -220,11 +222,18 @@ class Player {
       this.ySpeed = 0;
       this.onGround = true;
     }
+    if (keyIsDown(LEFT_ARROW)) {
+      this.xSpeed = -5;
+    }
+    else if (keyIsDown(RIGHT_ARROW)) {
+      this.xSpeed = 5;
+    }
     else {
-      //if not touching the ground, the player is either in the air or falling to its death
-      this.onGround = false;
+      this.xSpeed = 0;
     }
 
+    //Limits the player's movement to the level bounds
+    this.x = constrain(this.x, 0, 1600 - this.w); 
   }
   
   display() {
