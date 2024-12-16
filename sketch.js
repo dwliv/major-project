@@ -100,6 +100,10 @@ function runGame() {
   //Pans the screen when the player si too close to the right side
   cameraX = constrain(player.x - width / 2 + player.w / 2, 0, 1600-width);
 
+  //Saves the current transformation
+  push();
+  translate(-cameraX, 0);
+
   //Pan the screen/camera
   translate(-cameraX, 0);
 
@@ -269,8 +273,7 @@ class Coin {
   }
 
   display() {
-    fill(255, 223, 0);
-    ellipse(this.x + this.w / 2, this.y + this.h / 2, this.w, this.h);
+    image(coinImg, this.x + this.w / 2, this.y + this.h / 2, this.w, this.h);
   }
 }
 
@@ -303,11 +306,11 @@ function keyPressed() {
   if (gameState === "start" && buttonHover) {
     gameState = "playing";
   }
-  else if (gameState === "gameOver" && keyCode === 82) { //82 is they keyCode() for R or r in JavaScript
+  else if (gameState === "gameOver" && keyCode === "82") { //82 is they keyCode() for R or r in JavaScript
     resetGame();
     gameState = "start";
   }
-  else if (gameState === "playing" && keyCode === 87) { //87 is the keyCode() for W or w in JavaScript
+  else if (gameState === "playing" && keyCode === "87") { //87 is the keyCode() for W or w in JavaScript
     player.jump();
   }
 }
