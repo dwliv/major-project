@@ -5,6 +5,7 @@
 // - describe what you did to take this project "above and beyond"
 
 let player;
+let flagpole;
 let platforms = [];
 let blocks = [];
 let coins = []; 
@@ -22,9 +23,9 @@ let blockImg;
 let platformImg;
 let coinImg;
 let questionImg;
-let flagImg;
 let startMusic;
 let gameImg;
+
 
 //makes the camera pan to the left when the player gets too close to the right edge
 let cameraX = 0;
@@ -45,8 +46,7 @@ function preload() {
   platformImg = loadImage("platform.jpg");
   coinImg = loadImage("coin.jpg");
   questionImg = loadImage("question.jpg");
-  flagImg = loadImage("flag.jpg");
-  gameImg = loadImage("bg.jpg");
+  gameImg = loadImage("sky.jpg");
 }
 
 function setup() {
@@ -298,7 +298,40 @@ class Block {
     this.h = 45;
   }
   display() {
-    image(blockImg, this.x, this.y, this.w, thois.h);
+    image(blockImg, this.x, this.y, this.w, this.h);
+  }
+}
+
+class Flagpole {
+  constructor(x, y, h) {
+    this.x = x;
+    this.y = y;
+    this.h = h;
+    this.reached = false;
+  }
+  display() {
+    stroke(150);
+    strokeWeight(10);
+    line(this.x, this.y, this.x, this.y - height);
+
+    if (this.reached) {
+      fill(255, 0, 0);
+    }
+    else {
+      fill (255, 255, 0);
+    }
+    noStroke();
+    rect(this.x, this.y - height, 30, 20);
+  }
+  checkPlayer(player) {
+    //Checks if the player has reached the flagpole
+    if (player.x + player.w >= this.x && //Right edge of the player
+        player.y + player.h >=this.y - this.height //Left egde of the player
+    ) {
+      this.reached = true;
+      return true; //Player reached the flagpole
+    }
+    return false; //Player has not reached the flagpole
   }
 }
 
