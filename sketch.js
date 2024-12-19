@@ -104,9 +104,6 @@ function runGame() {
   push();
   translate(-cameraX, 0);
 
-  //Pan the screen/camera
-  translate(-cameraX, 0);
-
   fill(0);
   textSize(23);
   text(`Coins: ${collectedCoins}`, 55, 20);
@@ -136,6 +133,9 @@ function runGame() {
   for (let enemie of enemies) {
     enemies.update();
     enemie.display();
+    if (player.collidesWith(enemie)) {
+      gameState = "gameOver.";
+    }
 
     //Collision with enemie
     if (player.collidesWith(enemie)) {
@@ -173,6 +173,9 @@ function resetGame() {
     new Platform(200, 350, 100, 20),
     new Platform(400, 300, 100, 20),
     new Platform(600, 250, 100, 20),
+    new Platform(900, 250, 100, 20),
+    new Platform(1300, 350, 100, 20),
+    new Platform(1600, groundLevel, 400, 50),
   ];
 
   //Reset the blocks
@@ -194,7 +197,10 @@ function resetGame() {
 
   //Reset the enemies
   enemies = [
-    new Enemy(300, groundLevel - 20, 20, 20, 1)
+    new Enemy(400, groundLevel - 40, 40, 40, 1),
+    new Enemy(700, groundLevel - 40, 40, 40, -1),
+    new Enemy(1100, groundLevel - 40, 40, 40, 1),
+    new Enemy(1400, groundLevel - 40, 40, 40, -1),
   ];
 
   //Reset score
@@ -242,6 +248,18 @@ class Player {
   
   display() {
     image(marioImg, this.x, this.y, this.w, this.h);
+  }
+  jump() {
+    if (this.onGround) {
+      this.ySpeed = -15;
+      this.onGround = false;
+    }
+  }
+
+  landOn(platform) {
+    this.y = platform.y - this.h;
+    this.ySpeed = 0;
+    this.onGround = true;
   }
 }
 
