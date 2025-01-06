@@ -121,7 +121,7 @@ function runGame() {
 
   //Coins
   for (let i = coins.length-1; i >= 0; i--) {
-    coins[i],display();
+    coins[i].display();
     if (player.collidesWith(coins[i])) {
       //Remove Coins when you collect them
       coins.splice(1, i);
