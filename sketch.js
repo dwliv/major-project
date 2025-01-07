@@ -38,7 +38,7 @@ let buttonHeight = 50;
 let buttonHover = false;
 
 function preload() {
-  backgroundImg = loadImage("game.jpg");
+  backgroundImg = loadImage("games.jpg");
   marioImg = loadImage("mario.jpg");
   goombaImg = loadImage("goomba.jpg");
   startMusic = loadSound("startMusic.mp3");
@@ -97,7 +97,7 @@ function adjustVolume() {
 }
 
 function runGame() {
-  //Pans the screen when the player si too close to the right side
+  //Pans the screen when the player is too close to the right side
   cameraX = constrain(player.x - width / 2 + player.w / 2, 0, 1600-width);
 
   //Saves the current transformation
@@ -146,7 +146,7 @@ function runGame() {
   player.update();
   player.display();
 
-  for (let platform of plaforms) {
+  for (let platform of platforms) {
     if (player.collidesWith(platform)) {
       player.landOn(platform);
     }
@@ -324,13 +324,14 @@ class Flagpole {
   constructor(x, y, h) {
     this.x = x;
     this.y = y;
-    this.h = h;
+    this.h = height;
     this.reached = false;
   }
   display() {
+    //Draw the flagpole
     stroke(150);
     strokeWeight(10);
-    line(this.x, this.y, this.x, this.y - height);
+    line(this.x, this.y, this.x, this.y - this.h);
 
     if (this.reached) {
       fill(255, 0, 0);
@@ -339,12 +340,13 @@ class Flagpole {
       fill (255, 255, 0);
     }
     noStroke();
-    rect(this.x, this.y - height, 30, 20);
+    rect(this.x, this.y - this.h, 30, 20);
   }
   checkPlayer(player) {
     //Checks if the player has reached the flagpole
-    if (player.x + player.w >= this.x && //Right edge of the player
-        player.y + player.h >=this.y - this.height //Left egde of the player
+    if (player.x + player.w >= this.x &&
+        player.x <= this.x + 10 && //Right edge of the player
+        player.y + player.h >=this.y - this.h //Left egde of the player
     ) {
       this.reached = true;
       return true; //Player reached the flagpole
