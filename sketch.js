@@ -131,7 +131,7 @@ function runGame() {
 
   //Enemies
   for (let enemie of enemies) {
-    enemies.update();
+    enemie.update();
     enemie.display();
     if (player.collidesWith(enemie)) {
       gameState = "gameOver.";
@@ -203,6 +203,8 @@ function resetGame() {
     new Enemy(1400, groundLevel - 40, 40, 40, -1),
   ];
 
+ 
+
   //Reset score
   collectedCoins = 0;
 }
@@ -255,6 +257,9 @@ class Player {
       this.onGround = false;
     }
   }
+  collidesWith(object) {
+    return this.x < object.x + object.w && this.x + this.w > object.x && this.y < object.y + object.h && this.y + this.h > object.y;
+  }
 
   landOn(platform) {
     this.y = platform.y - this.h;
@@ -276,6 +281,7 @@ class Enemy {
     //moves the enemy horizontally by the speed value
     this.x += this.speed;
   }
+
 
   display() {
     image(goombaImg, this.x, this.y, this.w, this.h);
@@ -321,7 +327,7 @@ class Block {
 }
 
 class Flagpole {
-  constructor(x, y, h) {
+  constructor(x, y, height) {
     this.x = x;
     this.y = y;
     this.h = height;
@@ -356,8 +362,14 @@ class Flagpole {
 }
 
 function keyPressed() {
+  if (key === ' ') {
+    player.jump();
+  }
   if (gameState === "start" && buttonHover) {
     gameState = "playing";
+  }
+  if (keyCode === ' ') {
+    player.jump();
   }
   else if (gameState === "gameOver" && keyCode === "82") { //82 is they keyCode() for R or r in JavaScript
     resetGame();
