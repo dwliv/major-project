@@ -136,7 +136,7 @@ function runGame() {
     
     //Collision
     if (player.collidesWith(enemie)) {
-      gameState = "gameOver.";
+      gameState = "gameOver";
     }
   }
 
@@ -167,7 +167,7 @@ function gameOverScreen() {
   textAlign(CENTER, CENTER);
   text("Game Over", width/2, height/2 - 40);
   textSize(12);
-  text("Please press R to restart and hopefully you'll get better and win!", width / 2, height / 2);
+  text("Please press R or r to restart and hopefully you'll get better and win!", width / 2, height / 2);
 }
 
 function resetGame() {
@@ -210,7 +210,7 @@ function resetGame() {
     new Enemy(1400, groundLevel - 40, 40, 40, -1),
   ];
 
- 
+  flagpole = new Flagpole(1750, groundLevel - 200, 10, 200);
 
   //Reset score
   collectedCoins = 0;
@@ -287,6 +287,11 @@ class Enemy {
   update() {
     //moves the enemy horizontally by the speed value
     this.x += this.speed;
+
+    //makes sure the enemy doesn;t go off the screen
+    if (this.x <= 0 || this.x + this.w >= 1600) {
+      this.speed *= -1;
+    }
   }
 
 
@@ -334,30 +339,20 @@ class Block {
 }
 
 class Flagpole {
-  constructor(x, y, height) {
+  constructor(x, y, w, h) {
     this.x = x;
     this.y = y;
-    this.h = height;
-    this.reached = false;
+    this.w = w;
+    this.h = h;
   }
+
   display() {
     //Draw the flagpole
     fill(150, 23, 74);
-    line(this.x, this.y, this.x, this.y - this.h);
+    rect(this.x, this.y, this.w, this.h);
     
-    fill(255, 0, 0)
+    fill(255, 0, 0);
     triangle(this.x + this.w, this.y, this.x + this.w + 30, this.y + 15, this.x + this.w, this.y + 30);
-  }
-  checkPlayer(player) {
-    //Checks if the player has reached the flagpole
-    if (player.x + player.w >= this.x &&
-        player.x <= this.x + 10 && //Right edge of the player
-        player.y + player.h >=this.y - this.h //Left egde of the player
-    ) {
-      this.reached = true;
-      return true; //Player reached the flagpole
-    }
-    return false; //Player has not reached the flagpole
   }
 }
 
@@ -371,12 +366,9 @@ function keyPressed() {
   if (keyCode === ' ') {
     player.jump();
   }
-  else if (gameState === "gameOver" && keyCode === "82") { //82 is they keyCode() for R or r in JavaScript
+  else if (gameState === "gameOver" && key === "r" || key === 'R') { //82 is they keyCode() for R or r in JavaScript
     resetGame();
-    gameState = "start";
-  }
-  else if (gameState === "playing" && keyCode === "87") { //87 is the keyCode() for W or w in JavaScript
-    player.jump();
+    gameState = "playing";
   }
 }
 
