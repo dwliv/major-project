@@ -133,13 +133,10 @@ function runGame() {
   for (let enemie of enemies) {
     enemie.update();
     enemie.display();
+    
+    //Collision
     if (player.collidesWith(enemie)) {
       gameState = "gameOver.";
-    }
-
-    //Collision with enemie
-    if (player.collidesWith(enemie)) {
-      gameState = "gameOver";
     }
   }
 
@@ -151,6 +148,16 @@ function runGame() {
       player.landOn(platform);
     }
   }
+
+  //Makes the flagpole
+  flagpole.display();
+  if (player.collidesWith(flagpole)) {
+    gameState = "start";
+    collectedCoins = 0;
+    resetGame();
+    console.log("Congradulations! You've beaten the level!");
+  }
+  pop();
 }
 
 
@@ -159,7 +166,7 @@ function gameOverScreen() {
   textSize(38);
   textAlign(CENTER, CENTER);
   text("Game Over", width/2, height/2 - 40);
-  textSize(22);
+  textSize(12);
   text("Please press R to restart and hopefully you'll get better and win!", width / 2, height / 2);
 }
 
@@ -335,18 +342,11 @@ class Flagpole {
   }
   display() {
     //Draw the flagpole
-    stroke(150);
-    strokeWeight(10);
+    fill(150, 23, 74);
     line(this.x, this.y, this.x, this.y - this.h);
-
-    if (this.reached) {
-      fill(255, 0, 0);
-    }
-    else {
-      fill (255, 255, 0);
-    }
-    noStroke();
-    rect(this.x, this.y - this.h, 30, 20);
+    
+    fill(255, 0, 0)
+    triangle(this.x + this.w, this.y, this.x + this.w + 30, this.y + 15, this.x + this.w, this.y + 30);
   }
   checkPlayer(player) {
     //Checks if the player has reached the flagpole
