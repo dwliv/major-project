@@ -4,6 +4,9 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
+
+//type in terminal in the spotlight then press enter to enter the console on mac
+//To download eslint on mac go to wmci comp sci, go to "setting up work environment" add cs30-p5 then downnload nodes.js
 let player;
 let flagpole;
 let platforms = [];
@@ -16,6 +19,8 @@ let collectedCoins = 0;
 let gameState = "start";
 let windowWidth = 800;
 let windowHeight = 500;
+
+//Image variables
 let marioImg;
 let backgroundImg;
 let goombaImg;
@@ -23,8 +28,11 @@ let blockImg;
 let platformImg;
 let coinImg;
 let questionImg;
-let startMusic;
 let gameImg;
+
+//Sound variables
+let startMusic;
+let deathSound;
 
 
 //makes the camera pan to the left when the player gets too close to the right edge
@@ -32,7 +40,7 @@ let cameraX = 0;
 
 //Start button properties
 let buttonX = 300;
-let buttonY = 250;
+let buttonY = 370;
 let buttonWidth = 200;
 let buttonHeight = 50;
 let buttonHover = false;
@@ -41,12 +49,13 @@ function preload() {
   backgroundImg = loadImage("games.jpg");
   marioImg = loadImage("mario.jpg");
   goombaImg = loadImage("goomba.jpg");
-  startMusic = loadSound("startMusic.mp3");
+  startMusic = loadSound("music.mp3");
   blockImg = loadImage("block.png");
   platformImg = loadImage("platform.jpg");
   coinImg = loadImage("coin.jpg");
   questionImg = loadImage("question.jpg");
   gameImg = loadImage("sky.jpg");
+  deathSound = loadSound("death.mp3");
 }
 
 function setup() {
@@ -94,6 +103,7 @@ function showStartScreen() {
 
 function adjustVolume() {
   startMusic.amp(0.015);
+  deathSound.amp(1);
 }
 
 function runGame() {
@@ -103,12 +113,7 @@ function runGame() {
   //Saves the current transformation
   push();
   translate(-cameraX, 0);
-
-  fill(0);
-  textSize(23);
-  text(`Coins: ${collectedCoins}`, 55, 20);
   
-
   //Draw Platforms
   for (let platform of platforms) {
     platform.display();
@@ -137,6 +142,7 @@ function runGame() {
     //Collision
     if (player.collidesWith(enemie)) {
       gameState = "gameOver";
+      deathSound.play();
     }
   }
 
@@ -147,17 +153,22 @@ function runGame() {
     if (player.collidesWith(platform)) {
       player.landOn(platform);
     }
+
+    pop();
+
+    //Displays the score
+    fill(0);
+    textSize(23);
+    text(`Coins: ${collectedCoins}`, 55, 20);
   }
 
   //Makes the flagpole
   flagpole.display();
   if (player.collidesWith(flagpole)) {
     gameState = "start";
-    collectedCoins = 0;
     resetGame();
     console.log("Congradulations! You've beaten the level!");
   }
-  pop();
 }
 
 
@@ -168,6 +179,7 @@ function gameOverScreen() {
   text("Game Over", width/2, height/2 - 40);
   textSize(12);
   text("Please press R or r to restart and hopefully you'll get better and win!", width / 2, height / 2);
+  startMusic.stop();
 }
 
 function resetGame() {
@@ -348,7 +360,7 @@ class Flagpole {
 
   display() {
     //Draw the flagpole
-    fill(150, 23, 74);
+    fill(255, 255, 255);
     rect(this.x, this.y, this.w, this.h);
     
     fill(255, 0, 0);
