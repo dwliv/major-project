@@ -47,12 +47,12 @@ let buttonHover = false;
 
 function preload() {
   backgroundImg = loadImage("games.jpg");
-  marioImg = loadImage("mario.jpg");
-  goombaImg = loadImage("goomba.jpg");
+  marioImg = loadImage("mario.png");
+  goombaImg = loadImage("goomba.png");
   startMusic = loadSound("music.mp3");
   blockImg = loadImage("block.png");
-  platformImg = loadImage("platform.jpg");
-  coinImg = loadImage("coin.jpg");
+  platformImg = loadImage("platform.png");
+  coinImg = loadImage("coin.png");
   questionImg = loadImage("question.jpg");
   gameImg = loadImage("sky.jpg");
   deathSound = loadSound("death.mp3");
@@ -153,13 +153,12 @@ function runGame() {
     if (player.collidesWith(platform)) {
       player.landOn(platform);
     }
-
     pop();
 
     //Displays the score
     fill(0);
     textSize(23);
-    text(`Coins: ${collectedCoins}`, 55, 20);
+    text(`Coins: ${collectedCoins}`, 70, 20);
   }
 
   //Makes the flagpole
@@ -167,7 +166,7 @@ function runGame() {
   if (player.collidesWith(flagpole)) {
     gameState = "start";
     resetGame();
-    console.log("Congradulations! You've beaten the level!");
+    console.log("Congratulations! You've beaten the level!");
   }
 }
 
@@ -207,7 +206,7 @@ function resetGame() {
 
   //Reset the coins
   coins = [
-    new Coin(330, 285),
+    new Coin(330, 185),
     new Coin(630, 235),
     new Coin(930, 185),
     new Coin(1330, 285),
@@ -232,8 +231,8 @@ class Player {
   constructor(x, y, w, h) {
     this.x = x;
     this.y = y;
-    this.w = w;
-    this.h = h;
+    this.w = 50;
+    this.h = 75;
     this.xSpeed = 0;
     this.ySpeed = 0;
     this.onGround = false;
@@ -272,8 +271,8 @@ class Player {
   }
   jump() {
     if (this.onGround) {
-      this.ySpeed = -15;
-      this.onGround = false;
+      this.ySpeed = -15; //makes you go high
+      this.onGround = false; //PLayer is no longer on the ground after you jump
     }
   }
   collidesWith(object) {
@@ -281,9 +280,9 @@ class Player {
   }
 
   landOn(platform) {
-    this.y = platform.y - this.h;
-    this.ySpeed = 0;
-    this.onGround = true;
+    this.y = platform.y - this.h; //Places player on top of the platform
+    this.ySpeed = 0; // stops the verticle movement making you land on the platform
+    this.onGround = true; // You are now on the ground allowing you to jump again
   }
 }
 
@@ -308,7 +307,7 @@ class Enemy {
 
 
   display() {
-    image(goombaImg, this.x, this.y, this.w, this.h);
+    image(goombaImg, this.x, this.y, 50, 50);
   }
 }
 
