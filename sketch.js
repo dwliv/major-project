@@ -19,6 +19,7 @@ let collectedCoins = 0;
 let gameState = "start";
 let windowWidth = 800;
 let windowHeight = 500;
+let font;
 
 //Image variables
 let marioImg;
@@ -29,6 +30,7 @@ let platformImg;
 let coinImg;
 let questionImg;
 let gameImg;
+let sadImg;
 
 //Sound variables
 let startMusic;
@@ -40,13 +42,13 @@ let cameraX = 0;
 
 //Start button properties
 let buttonX = 300;
-let buttonY = 370;
+let buttonY = 250;
 let buttonWidth = 200;
 let buttonHeight = 50;
 let buttonHover = false;
 
 function preload() {
-  backgroundImg = loadImage("games.jpg");
+  backgroundImg = loadImage("start.jpg");
   marioImg = loadImage("mario.png");
   goombaImg = loadImage("goomba.png");
   startMusic = loadSound("music.mp3");
@@ -55,6 +57,7 @@ function preload() {
   coinImg = loadImage("coin.png");
   questionImg = loadImage("question.jpg");
   gameImg = loadImage("sky.jpg");
+  sadImg = loadImage("sad.png");
   deathSound = loadSound("death.mp3");
 }
 
@@ -82,7 +85,7 @@ function showStartScreen() {
   textFont('Courier New');
   textAlign(CENTER, CENTER);
   textSize(50);
-  text("New Super Mario Bros.", width / 2, height / 5);
+  text("New Super Mario Bros.", width / 2, height / 5 - 50);
   
   //Draw button
   if (buttonHover) {
@@ -172,12 +175,17 @@ function runGame() {
 
 
 function gameOverScreen() {
-  fill(0);
-  textSize(38);
+  clear();
+  setup();
+  background("black");
   textAlign(CENTER, CENTER);
-  text("Game Over", width/2, height/2 - 40);
-  textSize(12);
-  text("Please press R or r to restart and hopefully you'll get better and win!", width / 2, height / 2);
+  textSize(45);
+  fill("red");
+  text("GAME OVER", width / 2, height / 2 - 120);
+  textSize(35);
+  fill("red");
+  text("Please hit r or R to restart.", width / 2, height / 2 - 75);
+  image(sadImg, width/ 2 - 150, height / 2 - 5);
   startMusic.stop();
 }
 
