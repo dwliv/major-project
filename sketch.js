@@ -77,6 +77,9 @@ function draw() {
   else if (gameState === "gameOver") {
     gameOverScreen();
   }
+  else if (gameState === "win") {
+    showWinScreen();
+  }
 }
 
 function showStartScreen() {
@@ -149,6 +152,14 @@ function runGame() {
     }
   }
 
+    //Makes the flagpole
+    flagpole.display();
+    if (player.collidesWith(flagpole)) {
+      gameState = "win";
+      console.log("Congratulations! You've beaten the level!");
+      resetGame();
+    }
+
   player.update();
   player.display();
 
@@ -162,14 +173,6 @@ function runGame() {
     fill(0);
     textSize(23);
     text(`Coins: ${collectedCoins}`, 70, 20);
-  }
-
-  //Makes the flagpole
-  flagpole.display();
-  if (player.collidesWith(flagpole)) {
-    gameState = "start";
-    resetGame();
-    console.log("Congratulations! You've beaten the level!");
   }
 }
 
@@ -187,6 +190,16 @@ function gameOverScreen() {
   text("Please hit r or R to restart.", width / 2, height / 2 - 75);
   image(sadImg, width/ 2 - 150, height / 2 - 5);
   startMusic.stop();
+}
+
+function showWinScreen() {
+  background(0);
+  fill(255);
+  textSize(32);
+  textAlign(CENTER, CENTER);
+  text("Congratulations! You have beaten the level!", width / 2, height / 2);
+  textSize(20);
+  text("Press r or R to restart", width / 2, height / 2 + 20);
 }
 
 function resetGame() {
@@ -367,11 +380,13 @@ class Flagpole {
 
   display() {
     //Draw the flagpole
-    fill(255, 255, 255);
+    fill(139, 69, 19);
     rect(this.x, this.y, this.w, this.h);
     
     fill(255, 0, 0);
-    triangle(this.x + this.w, this.y, this.x + this.w + 30, this.y + 15, this.x + this.w, this.y + 30);
+    triangle(this.x + this.w, this.y, 
+      this.x + this.w + 30, this.y + 15, 
+      this.x + this.w, this.y + 30);
   }
 }
 
@@ -388,6 +403,10 @@ function keyPressed() {
   else if (gameState === "gameOver" && key === "r" || key === 'R') { //82 is they keyCode() for R or r in JavaScript
     resetGame();
     gameState = "playing";
+  }
+  else if ((gameState === "gameOver" || gameState === "win") && key === 'R' || key === 'r'); {
+    gameState = "start";
+    resetGame();
   }
 }
 
