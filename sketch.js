@@ -31,13 +31,15 @@ let coinImg;
 let questionImg;
 let gameImg;
 let sadImg;
+let happyImg;
 
 //Sound variables
 let startMusic;
 let deathSound;
+let winSound;
 
 
-//makes the camera pan to the left when the player gets too close to the right edge
+//Camera position for panning horizontally
 let cameraX = 0;
 
 //Start button properties
@@ -58,7 +60,9 @@ function preload() {
   questionImg = loadImage("question.jpg");
   gameImg = loadImage("sky.jpg");
   sadImg = loadImage("sad.png");
+  happyImg = loadImage("happy.png");
   deathSound = loadSound("death.mp3");
+  winSound = loadSound("win.mp3");
 }
 
 function setup() {
@@ -110,6 +114,7 @@ function showStartScreen() {
 function adjustVolume() {
   startMusic.amp(0.015);
   deathSound.amp(1);
+  winSound.amp(1);
 }
 
 function runGame() {
@@ -135,7 +140,7 @@ function runGame() {
     coins[i].display();
     if (player.collidesWith(coins[i])) {
       //Remove Coins when you collect them
-      coins.splice(1, i);
+      coins.splice(i, 1);
       collectedCoins++;
     }
   }
@@ -152,14 +157,6 @@ function runGame() {
     }
   }
 
-    //Makes the flagpole
-    flagpole.display();
-    if (player.collidesWith(flagpole)) {
-      gameState = "win";
-      console.log("Congratulations! You've beaten the level!");
-      resetGame();
-    }
-
   player.update();
   player.display();
 
@@ -167,14 +164,23 @@ function runGame() {
     if (player.collidesWith(platform)) {
       player.landOn(platform);
     }
-    pop();
-
-    //Displays the score
-    fill(0);
-    textSize(23);
-    text(`Coins: ${collectedCoins}`, 70, 20);
   }
+
+  //Makes the flagpole
+  flagpole.display();
+  if (player.collidesWith(flagpole)) {
+    gameState = "win";
+    winSound.play();
+    resetGame();
+  }
+  pop();
+
+  //Displays the score
+  fill(0);
+  textSize(23);
+  text(`Coins: ${collectedCoins}`, 70, 20);
 }
+
 
 
 function gameOverScreen() {
@@ -193,13 +199,16 @@ function gameOverScreen() {
 }
 
 function showWinScreen() {
+  clear();
+  setup();
   background(0);
-  fill(255);
-  textSize(32);
   textAlign(CENTER, CENTER);
-  text("Congratulations! You have beaten the level!", width / 2, height / 2);
+  textSize(27);
+  text("Congratulations! You have beaten the level!", width / 2, height / 2 - 150);
   textSize(20);
-  text("Press r or R to restart", width / 2, height / 2 + 20);
+  text("Press r or R to restart", width / 2, height / 2 - 50);
+  image(happyImg, width / 2 - 150, height / 2);
+  startMusic.stop();
 }
 
 function resetGame() {
@@ -208,7 +217,7 @@ function resetGame() {
 
   //Reset the platforms
   platforms = [
-    new Platform(0, groundLevel, width, 50),
+    new Platform(0, groundLevel, 200, 50),
     new Platform(200, 350, 100, 20),
     new Platform(400, 300, 100, 20),
     new Platform(600, 250, 100, 20),
@@ -242,10 +251,11 @@ function resetGame() {
     new Enemy(1400, groundLevel - 40, 40, 40, -1),
   ];
 
-  flagpole = new Flagpole(1750, groundLevel - 200, 10, 200);
+  flagpole = new Flagpole(1500, groundLevel - 200, 10, 200);
 
   //Reset score
   collectedCoins = 0;
+  cameraX = 0;
 }
 
 class Player {
@@ -336,8 +346,8 @@ class Coin {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.w = 25;
-    this.h = 25;
+    this.w = 20;
+    this.h = 20;
   }
 
   display() {
@@ -362,8 +372,8 @@ class Block {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.w = 45;
-    this.h = 45;
+    this.w = 40;
+    this.h = 40;
   }
   display() {
     image(blockImg, this.x, this.y, this.w, this.h);
@@ -380,6 +390,7 @@ class Flagpole {
 
   display() {
     //Draw the flagpole
+    console.log("here");
     fill(139, 69, 19);
     rect(this.x, this.y, this.w, this.h);
     
@@ -394,18 +405,8 @@ function keyPressed() {
   if (key === ' ') {
     player.jump();
   }
-  if (gameState === "start" && buttonHover) {
+  else if ((gameState === "gameOver" || gameState === "win") && key === 'R' || key === 'r') {
     gameState = "playing";
-  }
-  if (keyCode === ' ') {
-    player.jump();
-  }
-  else if (gameState === "gameOver" && key === "r" || key === 'R') { //82 is they keyCode() for R or r in JavaScript
-    resetGame();
-    gameState = "playing";
-  }
-  else if ((gameState === "gameOver" || gameState === "win") && key === 'R' || key === 'r'); {
-    gameState = "start";
     resetGame();
   }
 }
