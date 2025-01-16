@@ -28,6 +28,7 @@ let goombaImg;
 let blockImg;
 let platformImg;
 let coinImg;
+let flagImg;
 let questionImg;
 let gameImg;
 let sadImg;
@@ -37,6 +38,8 @@ let happyImg;
 let startMusic;
 let deathSound;
 let winSound;
+let coinSound;
+let menuMusic;
 
 
 //Camera position for panning horizontally
@@ -61,8 +64,11 @@ function preload() {
   gameImg = loadImage("sky.jpg");
   sadImg = loadImage("sad.png");
   happyImg = loadImage("happy.png");
+  flagImg = loadImage("flag.png");
   deathSound = loadSound("death.mp3");
   winSound = loadSound("win.mp3");
+  coinSound = loadSound("coinSnd.mp3");
+  menuMusic = loadSound("startSnd.mp3");
 }
 
 function setup() {
@@ -115,6 +121,7 @@ function adjustVolume() {
   startMusic.amp(0.015);
   deathSound.amp(1);
   winSound.amp(1);
+  coinSound.amp(1);
 }
 
 function runGame() {
@@ -141,6 +148,7 @@ function runGame() {
     if (player.collidesWith(coins[i])) {
       //Remove Coins when you collect them
       coins.splice(i, 1);
+      coinSound.play();
       collectedCoins++;
     }
   }
@@ -222,6 +230,7 @@ function resetGame() {
     new Platform(400, 300, 100, 20),
     new Platform(600, 250, 100, 20),
     new Platform(900, 250, 100, 20),
+    new Platform(1100, 300, 100, 20),
     new Platform(1300, 350, 100, 20),
     new Platform(1600, groundLevel, 400, 50),
   ];
@@ -229,18 +238,18 @@ function resetGame() {
   //Reset the blocks
   blocks = [
     new Block(320, 310),
-    new Block(620, 260),
-    new Block(920, 210),
-    new Block(1320, 310,)
+    new Block(530, 260),
+    new Block(920, 300),
+    new Block(1320, 210,)
   ];
 
   //Reset the coins
   coins = [
     new Coin(330, 185),
-    new Coin(630, 235),
+    new Coin(630, 135),
     new Coin(930, 185),
     new Coin(1330, 285),
-    new Coin(1500, 400),
+    new Coin(1400, 300),
   ];
 
   //Reset the enemies
@@ -330,7 +339,7 @@ class Enemy {
     //moves the enemy horizontally by the speed value
     this.x += this.speed;
 
-    //makes sure the enemy doesn;t go off the screen
+    //makes sure the enemy doesn't go off the screen
     if (this.x <= 0 || this.x + this.w >= 1600) {
       this.speed *= -1;
     }
@@ -389,15 +398,7 @@ class Flagpole {
   }
 
   display() {
-    //Draw the flagpole
-    console.log("here");
-    fill(139, 69, 19);
-    rect(this.x, this.y, this.w, this.h);
-    
-    fill(255, 0, 0);
-    triangle(this.x + this.w, this.y, 
-      this.x + this.w + 30, this.y + 15, 
-      this.x + this.w, this.y + 30);
+    image(flagImg, this.x, this.y - 40, this.w + 50, this.h + 50);
   }
 }
 
@@ -407,6 +408,10 @@ function keyPressed() {
   }
   else if ((gameState === "gameOver" || gameState === "win") && key === 'R' || key === 'r') {
     gameState = "playing";
+    startMusic.play();
+    deathSound.stop();
+    winSound.stop();
+    menuMusic.stop();
     resetGame();
   }
 }
