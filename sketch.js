@@ -7,6 +7,8 @@
 
 //type in terminal in the spotlight then press enter to enter the console on mac
 //To download eslint on mac go to wmci comp sci, go to "setting up work environment" add cs30-p5 then downnload nodes.js
+
+//game variables
 let player;
 let flagpole;
 let platforms = [];
@@ -40,12 +42,13 @@ let deathSound;
 let winSound;
 let coinSound;
 let menuMusic;
+let jumpSound;
 
 
 //Camera position for panning horizontally
 let cameraX = 0;
 
-//Start button properties
+//Start button property variables
 let buttonX = 300;
 let buttonY = 250;
 let buttonWidth = 200;
@@ -69,6 +72,7 @@ function preload() {
   winSound = loadSound("win.mp3");
   coinSound = loadSound("coinSnd.mp3");
   menuMusic = loadSound("startSnd.mp3");
+  jumpSound = loadSound("jumpSnd.mp3");
 }
 
 function setup() {
@@ -122,13 +126,14 @@ function adjustVolume() {
   deathSound.amp(1);
   winSound.amp(1);
   coinSound.amp(1);
+  jumpSound.amp(0.015);
 }
 
 function runGame() {
   //Pans the screen when the player is too close to the right side
-  cameraX = constrain(player.x - width / 2 + player.w / 2, 0, 1600-width);
+  cameraX = constrain(player.x - width / 2 + player.w / 2, 0, 1600-width); //Center the player in the screen and doesn't overpan
 
-  //Saves the current transformation
+  //creates the panning to make the player in the center of the screen when it's moving
   push();
   translate(-cameraX, 0);
   
@@ -313,6 +318,7 @@ class Player {
     if (this.onGround) {
       this.ySpeed = -15; //makes you go high
       this.onGround = false; //PLayer is no longer on the ground after you jump
+      jumpSound.play();
     }
   }
   collidesWith(object) {
