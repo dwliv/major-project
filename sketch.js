@@ -43,6 +43,7 @@ let winSound;
 let coinSound;
 let menuMusic;
 let jumpSound;
+let killSound;
 
 
 //Camera position for panning horizontally
@@ -73,6 +74,7 @@ function preload() {
   coinSound = loadSound("coinSnd.mp3");
   menuMusic = loadSound("startSnd.mp3");
   jumpSound = loadSound("jumpSnd.mp3");
+  killSound = loadSound("killSnd.mp3");
 }
 
 function setup() {
@@ -126,7 +128,8 @@ function adjustVolume() {
   deathSound.amp(1);
   winSound.amp(1);
   coinSound.amp(1);
-  jumpSound.amp(0.015);
+  jumpSound.amp(1);
+  killSound.amp(1);
 }
 
 function runGame() {
@@ -158,20 +161,29 @@ function runGame() {
     }
   }
 
-  //Enemies
-  for (let enemie of enemies) {
-    enemie.update();
-    enemie.display();
+  for (let i = enemies.length - 1; i >= 0; i--) {
+    enemies[i].update();
+    enemies[i].display();
     
-    //Collision
-    if (player.collidesWith(enemie)) {
-      gameState = "gameOver";
-      deathSound.play();
+    //Checks if player collides with enemy from the top
+    if (player.collidesWith(enemies[i])) {
+      //Check if the player lands on top
+      if (player.y + player.h <= enemies[i].y + 10) {
+        enemies.splice(i, 1);
+        killSound.play();
+        player.ySpeed = -10;
+      }
+      else {
+        gameState = "gameOver"
+        deathSound.play();
+      }
     }
   }
 
   player.update();
   player.display();
+
+ 
 
   for (let platform of platforms) {
     if (player.collidesWith(platform)) {
@@ -184,7 +196,7 @@ function runGame() {
   if (player.collidesWith(flagpole)) {
     gameState = "win";
     winSound.play();
-    resetGame();
+    
   }
   pop();
 
@@ -317,7 +329,7 @@ class Player {
   jump() {
     if (this.onGround) {
       this.ySpeed = -15; //makes you go high
-      this.onGround = false; //PLayer is no longer on the ground after you jump
+      this.onGround = false; //Player is no longer on the ground after you jump
       jumpSound.play();
     }
   }
