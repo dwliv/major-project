@@ -35,6 +35,7 @@ let questionImg;
 let gameImg;
 let sadImg;
 let happyImg;
+let koopaImg;
 
 //Sound variables
 let startMusic;
@@ -65,7 +66,7 @@ function preload() {
   platformImg = loadImage("platform.png");
   coinImg = loadImage("coin.png");
   questionImg = loadImage("question.jpg");
-  gameImg = loadImage("sky.jpg");
+  gameImg = loadImage("game.jpg");
   sadImg = loadImage("sad.png");
   happyImg = loadImage("happy.png");
   flagImg = loadImage("flag.png");
@@ -75,6 +76,7 @@ function preload() {
   menuMusic = loadSound("startSnd.mp3");
   jumpSound = loadSound("jumpSnd.mp3");
   killSound = loadSound("killSnd.mp3");
+  koopaImg = loadImage("koopa.png");
 }
 
 function setup() {
@@ -134,7 +136,7 @@ function adjustVolume() {
 
 function runGame() {
   //Pans the screen when the player is too close to the right side
-  cameraX = constrain(player.x - width / 2 + player.w / 2, 0, 1600-width); //Center the player in the screen and doesn't overpan
+  cameraX = constrain(player.x - width / 2 + player.w / 2, 0, 3200 - width); //Center the player in the screen and doesn't overpan
 
   //creates the panning to make the player in the center of the screen when it's moving
   push();
@@ -174,7 +176,7 @@ function runGame() {
         player.ySpeed = -10;
       }
       else {
-        gameState = "gameOver"
+        gameState = "gameOver";
         deathSound.play();
       }
     }
@@ -242,14 +244,19 @@ function resetGame() {
 
   //Reset the platforms
   platforms = [
-    new Platform(0, groundLevel, 200, 50),
-    new Platform(200, 350, 100, 20),
+    new Platform(0, 375, 200, 50),
+    new Platform(250, 300, 100, 20),
     new Platform(400, 300, 100, 20),
     new Platform(600, 250, 100, 20),
     new Platform(900, 250, 100, 20),
     new Platform(1100, 300, 100, 20),
     new Platform(1300, 350, 100, 20),
-    new Platform(1600, groundLevel, 400, 50),
+    new Platform(1600, 375, 400, 50),
+    new Platform(2000, 300, 100, 20),
+    new Platform(2400, 250, 100, 20),
+    new Platform(2600, 200, 100, 20),
+    new Platform(2800, 300, 100, 20),
+    new Platform(3000, 350, 100, 20),
   ];
 
   //Reset the blocks
@@ -257,7 +264,12 @@ function resetGame() {
     new Block(320, 310),
     new Block(530, 260),
     new Block(920, 300),
-    new Block(1320, 210,)
+    new Block(1320, 210),
+    new Block(1500, 300),
+    new Block(1650, 285),
+    new Block(1800, 190),
+    new Block(2500, 152),
+    new Block(2800, 200),
   ];
 
   //Reset the coins
@@ -267,6 +279,10 @@ function resetGame() {
     new Coin(930, 185),
     new Coin(1330, 285),
     new Coin(1400, 300),
+    new Coin(2100, 285),
+    new Coin(2500, 235),
+    new Coin(2900, 185),
+    new Coin(3100, 350),
   ];
 
   //Reset the enemies
@@ -275,9 +291,12 @@ function resetGame() {
     new Enemy(700, groundLevel - 40, 40, 40, -1),
     new Enemy(1100, groundLevel - 40, 40, 40, 1),
     new Enemy(1400, groundLevel - 40, 40, 40, -1),
+    new Enemy(2100, groundLevel - 40, 40, 40, -1),
+    new Enemy(2500, groundLevel - 40, 40, 40, -1),
+    new Enemy(2900, groundLevel- 40, 40, 40, -1),
   ];
 
-  flagpole = new Flagpole(1500, groundLevel - 200, 10, 200);
+  flagpole = new Flagpole(3100, groundLevel - 200, 10, 200);
 
   //Reset score
   collectedCoins = 0;
@@ -288,7 +307,7 @@ class Player {
   constructor(x, y, w, h) {
     this.x = x;
     this.y = y;
-    this.w = 50;
+    this.w = w;
     this.h = 75;
     this.xSpeed = 0;
     this.ySpeed = 0;
@@ -301,6 +320,9 @@ class Player {
 
     //Add horizontal movement
     this.x+= this.xSpeed;
+
+    //keep the player within the level bounds
+    this.x = constrain(this.x, 0, 3200 - this.w);
 
     //Prevents the player from falling below the ground level
     if (this.y + this.h >= groundLevel) {
@@ -318,9 +340,6 @@ class Player {
     else {
       this.xSpeed = 0;
     }
-
-    //Limits the player's movement to the level bounds
-    this.x = constrain(this.x, 0, 1600 - this.w); 
   }
   
   display() {
@@ -358,7 +377,7 @@ class Enemy {
     this.x += this.speed;
 
     //makes sure the enemy doesn't go off the screen
-    if (this.x <= 0 || this.x + this.w >= 1600) {
+    if (this.x <= 0 || this.x + this.w >= 3200) {
       this.speed *= -1;
     }
   }

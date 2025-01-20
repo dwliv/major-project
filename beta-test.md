@@ -12,3 +12,4 @@
 - interact with blocks
 - game is kinda easy once you know the pattern of the enemies
 - add power-ups
+- add time limit
