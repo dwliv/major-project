@@ -5,8 +5,6 @@
 // - describe what you did to take this project "above and beyond"
 
 
-//type in terminal in the spotlight then press enter to enter the console on mac
-//To download eslint on mac go to wmci comp sci, go to "setting up work environment" add cs30-p5 then downnload nodes.js
 
 //game variables
 let player;
@@ -21,7 +19,7 @@ let collectedCoins = 0;
 let gameState = "start";
 let windowWidth = 800;
 let windowHeight = 500;
-let font;
+let timer = 15;
 
 //Image variables
 let marioImg;
@@ -35,7 +33,6 @@ let questionImg;
 let gameImg;
 let sadImg;
 let happyImg;
-let koopaImg;
 
 //Sound variables
 let startMusic;
@@ -76,7 +73,6 @@ function preload() {
   menuMusic = loadSound("startSnd.mp3");
   jumpSound = loadSound("jumpSnd.mp3");
   killSound = loadSound("killSnd.mp3");
-  koopaImg = loadImage("koopa.png");
 }
 
 function setup() {
@@ -90,10 +86,20 @@ function draw() {
     showStartScreen();
   }
   else if (gameState === "playing") {
+    if (frameCount % 60 === 0 && timer > 0) {
+      timer--;
+    }
+
+    if (timer === 0) {
+      gameState = "gameOver";
+    }
+    
     runGame();
+  
   }
   else if (gameState === "gameOver") {
     gameOverScreen();
+  
   }
   else if (gameState === "win") {
     showWinScreen();
@@ -130,7 +136,7 @@ function adjustVolume() {
   deathSound.amp(1);
   winSound.amp(1);
   coinSound.amp(1);
-  jumpSound.amp(1);
+  jumpSound.amp(0.015);
   killSound.amp(1);
 }
 
@@ -206,6 +212,16 @@ function runGame() {
   fill(0);
   textSize(23);
   text(`Coins: ${collectedCoins}`, 70, 20);
+
+  //Display timer
+  if (timer <= 10) {
+    fill("red");
+  }
+  else {
+    fill("black");
+  }
+  textSize(20);
+  text(`Time: ${timer}`, width - 100, 20); 
 }
 
 
@@ -300,6 +316,7 @@ function resetGame() {
 
   //Reset score
   collectedCoins = 0;
+  timer = 15;
   cameraX = 0;
 }
 
@@ -443,7 +460,7 @@ function keyPressed() {
   if (key === ' ') {
     player.jump();
   }
-  else if ((gameState === "gameOver" || gameState === "win") && key === 'R' || key === 'r') {
+  else if ((gameState === "gameOver" || gameState === "win") && (key === 'R' || key === 'r')) {
     gameState = "playing";
     startMusic.play();
     deathSound.stop();
